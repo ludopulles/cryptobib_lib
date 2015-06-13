@@ -32,7 +32,7 @@ from pybtex.bibtex.utils import split_tex_string
 from pybtex.errors import report_error
 from pybtex import textutils
 
-from mybibtex.month_names import month_names
+from month_names import month_names
 
 _whitespace_re = re.compile(r'\s+')
 

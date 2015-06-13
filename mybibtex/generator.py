@@ -1,12 +1,15 @@
 from __future__ import print_function
 
-import config
-from mybibtex.database import *
-from mybibtex import tools
+from database import *
+import tools
 
 import StringIO
 from abc import ABCMeta, abstractmethod
 import logging
+
+# WARNING: do not forge to set this variable to the correct config module when loading this module
+# FIXME: need to remove this dirty hack!
+config = None 
 
 class EntryFilter(object):
     """ Composable entry filters: it is possible to compose a filter FilterA with a filter FilterB by instantiating FilterA(FilterB()) """

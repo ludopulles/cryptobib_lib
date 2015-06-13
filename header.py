@@ -1,5 +1,3 @@
-import config
-
 import datetime
 from string import Template
 
@@ -89,7 +87,7 @@ ${conf_labels}%
 """
 
 
-def get_header(script, conf_years=None):
+def get_header(config, script, conf_years=None):
     timestamp = datetime.date.today().isoformat()
 
     if conf_years!=None:

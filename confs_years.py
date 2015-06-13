@@ -5,8 +5,6 @@ This library enables to get the list of confs with years from a mybibtex.databas
 import mybibtex.database
 from mybibtex import tools
 
-from config import *
-
 import logging
 
 def get_confs_years(db):
@@ -22,25 +20,9 @@ def get_confs_years(db):
     
     return confs
 
-def get_confs_years_inter_from_set(confs):
+def get_confs_years_inter_from_set(confs, missing_years):
     """ Convert a dictionnary of conferences (keys) with set of years to a dictionnary of conferences with intervals, i.e., tuples (start year, end year)
-    If some years are missing, log it except for hardcoded exceptions """
-
-    missing_years = {
-        "AC": set([1993, 1995, 1997]),
-        "CCS": set([1995]),
-        "EC": set([1983]),
-        "ESORICS": set([1991, 1993, 1995, 1997, 1999, 2001]),
-        "FSE": set([1995]),
-        "ICICS": set([1998, 2000]),
-        "ICITS": set([2010]),
-        "IMA": set([1996, 1998, 2000, 2002, 2004, 2006, 2008, 2010, 2012]),
-        "ISC": set([1998, 2013]),
-        "LATIN": set([1993, 1994, 1996, 1997, 1999, 2001, 2003, 2005, 2007, 2009, 2011, 2013]),
-        "LC": set([2011]),
-        "PAIRING": set([2011]),
-        "SCN": set([2003, 2005, 2007, 2009, 2011, 2013]),
-    }
+    If some years are missing, log it except if missing_years[conf] contain this year """
 
     def get_missing_years(conf):
         if conf in missing_years:
@@ -55,7 +37,7 @@ def get_confs_years_inter_from_set(confs):
         if not (set(range(min_year, max_year+1)) <= years):
             mis_years = set(range(min_year, max_year+1)) - years
             min_year = max(mis_years)+1
-            logging.warning("For conference \"{}\", years {} are missing - so min year={} - to add an exception please modify lib/confs_years.py - variable missing_years".format(
+            logging.warning("For conference \"{}\", years {} are missing - so min year={} - to add an exception please modify db/config.py - variable missing_years".format(
                 conf,
                 ", ".join([str(y) for y in sorted(list(mis_years))]),
                 min_year
@@ -68,6 +50,6 @@ def get_confs_years_inter_from_set(confs):
     }
     return confs_inter
 
-def get_confs_years_inter(db):
-    return get_confs_years_inter_from_set(get_confs_years(db))
+def get_confs_years_inter(db, confs_missing_years):
+    return get_confs_years_inter_from_set(get_confs_years(db), confs_missing_years)
     
