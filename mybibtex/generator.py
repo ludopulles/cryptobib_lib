@@ -60,17 +60,18 @@ class SortConfYearPage(EntrySort):
             try:
                 pages = entry.fields["pages"].expand().split("--")
                 if len(pages) == 1:
-                    return (int(pages[0]), int(pages[0]))
+                    return (pages[0], pages[0])
                 elif len(pages) == 2:
-                    return (int(pages[0]), int(pages[1]))
+                    return (pages[0], pages[1])
                 else:
                     logging.warning("Problem in entry \"{0}\": incorrect pages !".format(key))
-                    return (0,0)
+                    return ("0","0")
             except ValueError, e:
                 logging.warning("Problem in entry \"{0}\": incorrect pages !".format(key))
-                return (0,0)
+                return ("0","0")
         else:
-            return (0,0)
+            return ("0","0")
+        # Previously pages were integers but because of LIPIcs, pages can now be of the form 5:1--5:10
 
     def proc_year(self, year):
         full_year = tools.short_to_full_year(year)
@@ -105,7 +106,7 @@ class SortConfYearPage(EntrySort):
     def key(self, ke):
         (k,e) = ke
         (p1, p2) = self.get_pages(k,e)
-        return u"{:<15}-{:0>4d}-{:<10}-{:>10}-{:0>10d}-{:0>10d}-{:0>10d}".format(
+        return u"{:<15}-{:0>4d}-{:<10}-{:>10}-{:0>10d}-{:>10}-{:>10}".format(
             self.proc_confkey(k.confkey), 
             self.proc_year(k.year), 
             self.proc_dis(e),
