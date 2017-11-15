@@ -89,6 +89,20 @@ class SortConfYearPage(EntrySort):
         else:
             return EntryKey.from_string(e.fields["crossref"].expand()).dis        
 
+    pattern_eprint = re.compile(r"^Cryptology ePrint Archive, Report (\d*)/(\d*)")
+
+    def proc_eprint(self, e):
+        """ This function is used to sort correctly eprint """
+        empty = "xxxx/xxxxx"
+        if "howpublished" not in e.fields:
+            return empty
+
+        m = self.pattern_eprint.match(e.fields["howpublished"].expand())
+        if not m:
+            return empty # not an eprint
+
+        return u"{:0>4d}/{:0>5d}".format(int(m.group(1)), int(m.group(2)))
+
     def proc_volume(self, e):
         if "volume" not in e.fields:
             return 0
@@ -106,10 +120,12 @@ class SortConfYearPage(EntrySort):
     def key(self, ke):
         (k,e) = ke
         (p1, p2) = self.get_pages(k,e)
-        return u"{:<15}-{:0>4d}-{:<10}-{:>10}-{:0>10d}-{:>10}-{:>10}".format(
+
+        return u"{:<15}-{:0>4d}-{:<10}-{}-{:>10}-{:0>10d}-{:>10}-{:>10}".format(
             self.proc_confkey(k.confkey), 
             self.proc_year(k.year), 
             self.proc_dis(e),
+            self.proc_eprint(e),
             self.proc_volume(e),
             self.proc_number(e),
             p1,
