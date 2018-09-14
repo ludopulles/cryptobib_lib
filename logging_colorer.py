@@ -2,6 +2,10 @@
 # encoding: utf-8
 
 # From http://stackoverflow.com/questions/384076/how-can-i-color-python-logging-output
+# To get colored logging
+#   import logging
+#   import logging_colorer
+#   logging_color.init()
 
 import logging
 import platform
