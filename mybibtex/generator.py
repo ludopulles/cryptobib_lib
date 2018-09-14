@@ -24,8 +24,8 @@ class EntryFilter(object):
         pass
 
     def filter(self, entries):
-        entries = entries if self.filter_and == None else self.filter_and.filter(entries)
-        for (k,e) in entries.iteritems():
+        entries = entries.iteritems() if self.filter_and == None else self.filter_and.filter(entries)
+        for (k,e) in entries:
             if self.is_selected(k, e):
                 yield (k,e)
 
