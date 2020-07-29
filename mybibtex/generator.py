@@ -1,5 +1,7 @@
 from __future__ import print_function
 
+import codecs
+
 from database import *
 import tools
 
@@ -103,25 +105,34 @@ class SortConfYearPage(EntrySort):
 
         return u"{:0>4d}/{:0>5d}".format(int(m.group(1)), int(m.group(2)))
 
+    def proc_int_descending(self, val):
+        """ proc_int_descending is used to convert the value val into an integer so that 
+        when the value val decreases, the integer increases.
+        Assumes that either val is always an integer or is always a non-integer string """
+        if val == "":
+            return 0
+        if not val.isdigit():
+            # Convert the value into an integer, looking at the value as a big-endian byte-array
+            val = int(codecs.encode(val, 'hex'), 16)
+        return int(1e20-1) - int(val)
+
     def proc_volume(self, e):
         if "volume" not in e.fields:
             return 0
         else:
-            vol = e.fields["volume"].expand()
-            if vol.isdigit():
-                return 999999-int(vol)
+            return self.proc_int_descending(e.fields["volume"].expand())
 
     def proc_number(self, e):
         if "number" not in e.fields:
             return 0
         else:
-            return 999999-int(e.fields["number"].expand())
+            return self.proc_int_descending(e.fields["number"].expand())
 
     def key(self, ke):
         (k,e) = ke
         (p1, p2) = self.get_pages(k,e)
 
-        return u"{:<15}-{:0>4d}-{:<10}-{}-{:>10}-{:0>10d}-{:>10}-{:>10}".format(
+        return u"{:<15}-{:0>4d}-{:<10}-{}-{:>10}-{:0>10d}-{:0>20}-{:0>20}".format(
             self.proc_confkey(k.confkey), 
             self.proc_year(k.year), 
             self.proc_dis(e),
