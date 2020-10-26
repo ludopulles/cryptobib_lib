@@ -2,7 +2,6 @@
 This library enables to get the list of confs with years from a mybibtex.database
 """
 
-import mybibtex.database
 from mybibtex import tools
 
 import logging
@@ -10,7 +9,7 @@ import logging
 def get_confs_years(db):
     """ Return a dict associating a conference key to the set of years present in db """
     confs = {}
-    for (key, entry) in db.entries.iteritems():
+    for (key, entry) in db.entries.items():
         if key.auth == None:
             continue # we are only interested in papers !
         conf = key.confkey
@@ -46,7 +45,7 @@ def get_confs_years_inter_from_set(confs, missing_years):
 
     confs_inter = {
         conf: set_to_tuple(conf, confs[conf]) 
-        for conf in sorted(confs.iterkeys())
+        for conf in sorted(confs.keys())
     }
     return confs_inter
 

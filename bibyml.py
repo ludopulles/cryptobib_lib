@@ -24,7 +24,7 @@ corresponds to the dictionnary:
 """
 
 import re
-import StringIO
+import io
 from collections import OrderedDict
 
 _parser_re = re.compile(r'^(\s*)([^:]+):(.*)$')
@@ -93,7 +93,7 @@ def parse(f):
     return res
 
 def write(out, d, indent_key=4, indent_value=24, cur_indent=0):
-    for (k,v) in d.iteritems():
+    for (k,v) in d.items():
         if k=="":
             continue
         if "" in v and v[""] != "":
@@ -111,7 +111,7 @@ def write(out, d, indent_key=4, indent_value=24, cur_indent=0):
         write(out, v, cur_indent=cur_indent+1)
 
 def write_str(d, *args, **kwargs):
-    out = StringIO.StringIO()
+    out = io.StringIO()
     write(out, d, *args, **kwargs)
     return out.getvalue()
             

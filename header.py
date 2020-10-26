@@ -95,7 +95,7 @@ def get_header(config, script, conf_years=None):
 %  List of complete conferences:
 %""".split("\n")
         
-        for conf in sorted(conf_years.iterkeys(), key=lambda x: config.get_conf_name(x)):
+        for conf in sorted(iter(conf_years.keys()), key=lambda x: config.get_conf_name(x)):
             (start, end) = conf_years[conf]
             name = config.get_conf_name(conf)
             conf_years_complete.append("%    {}:{}{} - {}".format(name, " "*(16-len(conf)-1), start, end))
@@ -109,7 +109,7 @@ def get_header(config, script, conf_years=None):
 
     conf_labels = []
     for conf_key in sorted(
-            config.confs.iterkeys(), 
+            iter(config.confs.keys()), 
             key = lambda x:config.get_conf_name(x)
     ):
         conf_name = config.get_conf_name(conf_key)

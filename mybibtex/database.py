@@ -32,7 +32,7 @@ from pybtex.bibtex.utils import split_tex_string
 from pybtex.errors import report_error
 from pybtex import textutils
 
-from month_names import month_names
+from .month_names import month_names
 
 _whitespace_re = re.compile(r'\s+')
 
@@ -50,7 +50,7 @@ class BibliographyData(object):
         self._preamble = []
         if entries:
             if isinstance(entries, Mapping):
-                entries = entries.iteritems()
+                entries = iter(entries.items())
             for (key, entry) in entries:
                 self.add_entry(key, entry)
         if preamble:
@@ -97,7 +97,7 @@ class FieldDict(dict):
     def __missing__(self, key):
         if key in self.parent.persons:
             persons = self.parent.persons[key]
-            return ' and '.join(unicode(person) for person in persons)
+            return ' and '.join(str(person) for person in persons)
         elif 'crossref' in self:
             return self.parent.get_crossref().fields[key]
         else:
@@ -286,7 +286,7 @@ class Person(object):
         return ', '.join(part for part in (von_last, jr, first) if part)
 
     def __repr__(self):
-        return 'Person({0})'.format(repr(unicode(self)))
+        return 'Person({0})'.format(repr(str(self)))
 
     def get_part_as_text(self, type):
         names = getattr(self, '_' + type)
@@ -339,7 +339,7 @@ class FieldDict(dict):
     def __missing__(self, key):
         if key in self.parent.persons:
             persons = self.parent.persons[key]
-            return ' and '.join(unicode(person) for person in persons)
+            return ' and '.join(str(person) for person in persons)
         elif 'crossref' in self:
             return self.parent.get_crossref().fields[key]
         else:
@@ -353,7 +353,7 @@ class FieldDict(dict):
 class EntryKeyParsingError(Exception):
     def __init__(self, key):
         self.key = key
-        message = u'Error while parsing key "{0}"'.format(key)
+        message = 'Error while parsing key "{0}"'.format(key)
         super(EntryKeyParsingError, self).__init__(message)
 
 class EntryKey(object):
@@ -378,17 +378,17 @@ class EntryKey(object):
         (confkey, auth, year, dis) = r.groups()
         return cls(confkey, year, auth, dis)
 
-    def __unicode__(self):
+    def __str__(self):
         if self.auth == None:
-            return u"{0}{1:02d}{2}".format(self.confkey, self.year, self.dis)
+            return "{0}{1:02d}{2}".format(self.confkey, self.year, self.dis)
         else:
-            return u"{0}:{1}{2:02d}{3}".format(self.confkey, self.auth, self.year, self.dis)
+            return "{0}:{1}{2:02d}{3}".format(self.confkey, self.auth, self.year, self.dis)
 
     def __repr__(self):
-        return u"EntryKey({0})".format(unicode(self))
+        return "EntryKey({0})".format(str(self))
 
     def __hash__(self):
-        return unicode(self).__hash__()
+        return str(self).__hash__()
 
     def __eq__(self, other):
         return (self.confkey == other.confkey and 
@@ -399,21 +399,21 @@ class EntryKey(object):
 class Value(list):
     """ Model a value in bibtex, i.e., a concatenation of value parts """
     def expand(self):
-        return u''.join([value_part.expand() for value_part in self])
+        return ''.join([value_part.expand() for value_part in self])
 
     def __repr__(self):
-        return u"Value({0})".format(repr(list(self)))
+        return "Value({0})".format(repr(list(self)))
 
     def to_bib(self, expand=False):
         """ transform the value into a bib value; if expand=True, expand all macros EXCEPT month names """
-        return u" # ".join([value_part.to_bib(expand=expand) for value_part in self])
+        return " # ".join([value_part.to_bib(expand=expand) for value_part in self])
 
 class ValuePart(object):
     """ Model a value part """
     def __init__(self, val, normalize = True):
         self.val = val if normalize == False else normalize_whitespace(val)
 
-    def __unicode__(self):
+    def __str__(self):
         """ Return the original bibtex representation """
         return self.val
 
@@ -425,18 +425,18 @@ class ValuePart(object):
         return self.val
 
     def to_bib(self, expand=False):
-        return unicode(self)
+        return str(self)
 
 class ValuePartNumber(ValuePart):
     pass
 
 class ValuePartQuote(ValuePart):
-    def __unicode__(self):
-        return u'"{0}"'.format(self.val)
+    def __str__(self):
+        return '"{0}"'.format(self.val)
 
 class ValuePartBrace(ValuePart):
-    def __unicode__(self):
-        return u'{{{0}}}'.format(self.val)
+    def __str__(self):
+        return '{{{0}}}'.format(self.val)
 
 class ValuePartMacro(ValuePart):
     def __init__(self, macro_name, macro_val):
@@ -446,7 +446,7 @@ class ValuePartMacro(ValuePart):
         self.macro_name = macro_name
         self.macro_val = macro_val
 
-    def __unicode__(self):
+    def __str__(self):
         return self.macro_name
 
     def __repr__(self):
