@@ -21,7 +21,7 @@
 
 import re
 
-from collections import Mapping
+from collections.abc import Mapping
 from functools import total_ordering
 
 from pybtex.exceptions import PybtexError
