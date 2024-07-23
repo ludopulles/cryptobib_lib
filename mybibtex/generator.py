@@ -189,7 +189,7 @@ def bibtex_entry_format_fields(db, key, entry, expand_crossrefs=False, expand_va
 
     return fields
 
-def bibtex_write_entry(out, db, key, entry, expand_crossrefs=False, expand_values=False):
+def bibtex_write_entry(out, db, key, entry, expand_crossrefs=False, expand_values=False, remove_empty_fields=False):
     """ Write a bibtex entry in out """
 
     def key_sort(key):
@@ -210,6 +210,12 @@ def bibtex_write_entry(out, db, key, entry, expand_crossrefs=False, expand_value
     out.write("@{0}{{{1},\n".format(format_type(entry.type), str(key)))
 
     for k in sorted(iter(fields.keys()), key=key_sort):
+        # remove empty fields after expansion
+        if remove_empty_fields:
+            v_expanded = fields[k].to_bib(expand = True)
+            if v_expanded == '""': 
+                continue
+
         v = fields[k].to_bib(expand = expand_values)
 
         # v_ascii only contains ascii characters
@@ -232,10 +238,15 @@ def bibtex_write_entries(out, db, entries, *args, **kwargs):
         
 
 def bibtex_gen(out, db, entry_filter=FilterPaper(), entry_sort=SortConfYearPage(), expand_crossrefs=False, include_crossrefs=False, *args, **kwargs):
-    """ Options:
+    """ 
+    Generate bibtex file
+
+    Options:
     @arg expand_crossrefs: expand crossrefs inside entries instead of keeping the crossref field if True,
     @arg include_crossrefs: include crossrefs in the output if True and expand_crossrefs=False,
     @arg expand_values: expand values (using macros) if True
+    @arg remove_empty_fields: remove empty fields if True, empty fields are ones that are either empty or expand to an empty value 
+      (in case expand_values=False and multiple macros values may be used using, e.g., multiple "abbrev*.bib" files, be extra careful)
     """
     entries = dict(entry_filter.filter(db.entries))
     bibtex_write_entries(
