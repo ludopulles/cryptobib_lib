@@ -1,11 +1,16 @@
 # Functions for web/app/controllers/default.py
 
+# Note: we need to target Python 3.6
+# and thus cannot use the new syntax tuple[dict, dict, dict]
+# and instead need Tuple[dict, dict, dict]
+
+from typing import Tuple
 import re
 
 re_years = re.compile(r"^\s*(\d*)\s*(-\s*(\d*)\s*)?$")
 
 
-def get_years(confs: iter, vars: dict) -> tuple[dict, dict, int]:
+def get_years(confs: iter, vars: dict) -> Tuple[dict, dict, int]:
     errors = {}
     years = {}
     nb = 0
