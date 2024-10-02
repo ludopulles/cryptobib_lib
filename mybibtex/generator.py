@@ -139,37 +139,19 @@ class SortConfYearPage(EntrySort):
             p1,
             p2
         )
-       
-def bibtex_entry_format_fields(db, key, entry, expand_crossrefs=False, expand_values=False):
-    """ Return a dictionnay of formatted fields """
 
-    def format_name(person):
-        def join(l):
-            return ' '.join([name for name in l if name])
-        first = person.get_part_as_text('first')
-        middle = person.get_part_as_text('middle')
-        prelast = person.get_part_as_text('prelast')
-        last = person.get_part_as_text('last')
-        lineage = person.get_part_as_text('lineage')
-        s = '' 
-        if last:
-            s += join([prelast, last])
-        if lineage:
-            s += ', %s' % lineage
-        if first or middle:
-            s += ', '
-            s += join([first, middle])
-        return s
+def bibtex_entry_format_fields(db, key, entry, expand_crossrefs=False, expand_values=False):
+    """ Return a dictionary of formatted fields """
 
     def format_persons(persons):
-        return Value([ValuePartQuote((" and ").join([format_name(person) for person in persons]))])
+        return Value([ValuePartQuote((" and ").join([str(person) for person in persons]))])
 
     def format_author(author):
         res = author.expand().replace(" and ", " and\n" + " "*18)
         return Value([ValuePartQuote(res, normalize=False)])
 
     fields = entry.fields.copy()
-    
+
     # expand persons
     for (role, persons) in entry.persons.items():
         if role not in fields:
