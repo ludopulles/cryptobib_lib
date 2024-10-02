@@ -12,4 +12,3 @@ month_names = {
     'nov': 'November',
     'dec': 'December'
 }
-

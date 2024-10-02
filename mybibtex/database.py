@@ -80,7 +80,7 @@ class BibliographyData(object):
         if not isinstance(key, EntryKey):
             key = EntryKey.from_string(key)
         if key in self.entries:
-            report_error(BibliographyDataError('repeated bibliograhpy entry: %s' % key))
+            report_error(BibliographyDataError('repeated bibliography entry: %s' % key))
             return
         entry.collection = self
         entry.key = key
@@ -362,7 +362,7 @@ class EntryKey(object):
         self.confkey = confkey
         """ conference abbreviation for key """
         self.auth = auth
-        """ authors formatted as required in key (last name or first letters or ...) or None if this is a conferece """
+        """ authors formatted as required in key (last name or first letters or ...) or None if this is a conference """
         self.year = int(year) % 100
         """ year of the conference (2 digits) """
         self.dis = dis
@@ -391,9 +391,9 @@ class EntryKey(object):
         return str(self).__hash__()
 
     def __eq__(self, other):
-        return (self.confkey == other.confkey and 
-                self.auth == other.auth and 
-                self.year == other.year and 
+        return (self.confkey == other.confkey and
+                self.auth == other.auth and
+                self.year == other.year and
                 self.dis == other.dis)
 
 class Value(list):

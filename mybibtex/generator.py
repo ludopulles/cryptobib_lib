@@ -11,7 +11,7 @@ import logging
 
 # WARNING: do not forge to set this variable to the correct config module when loading this module
 # FIXME: need to remove this dirty hack!
-config = None 
+config = None
 
 class EntryFilter(object, metaclass=ABCMeta):
     """ Composable entry filters: it is possible to compose a filter FilterA with a filter FilterB by instantiating FilterA(FilterB()) """
@@ -49,7 +49,7 @@ class EntrySort(object, metaclass=ABCMeta):
     @abstractmethod
     def key(self, ke):
         pass
-    
+
     def sort(self, entries):
         return sorted(entries, key=self.key)
 
@@ -86,7 +86,7 @@ class SortConfYearPage(EntrySort):
         if "crossref" not in e.fields:
             return ""
         else:
-            return EntryKey.from_string(e.fields["crossref"].expand()).dis        
+            return EntryKey.from_string(e.fields["crossref"].expand()).dis
 
     pattern_eprint = re.compile(r"^Cryptology ePrint Archive, Report (\d*)/(\d*)")
 
@@ -130,8 +130,8 @@ class SortConfYearPage(EntrySort):
         (p1, p2) = self.get_pages(k,e)
 
         return "{:<15}-{:0>4d}-{:<10}-{}-{:>10}-{:0>10d}-{:0>20}-{:0>20}".format(
-            self.proc_confkey(k.confkey), 
-            self.proc_year(k.year), 
+            self.proc_confkey(k.confkey),
+            self.proc_year(k.year),
             self.proc_dis(e),
             self.proc_eprint(e),
             self.proc_volume(e),
@@ -213,7 +213,7 @@ def bibtex_write_entry(out, db, key, entry, expand_crossrefs=False, expand_value
         # remove empty fields after expansion
         if remove_empty_fields:
             v_expanded = fields[k].to_bib(expand = True)
-            if v_expanded == '""': 
+            if v_expanded == '""':
                 continue
 
         v = fields[k].to_bib(expand = expand_values)
@@ -235,28 +235,28 @@ def bibtex_write_entries(out, db, entries, *args, **kwargs):
     for key, entry in entries:
         bibtex_write_entry(out, db, key, entry, *args, **kwargs)
         out.write("\n\n")
-        
+
 
 def bibtex_gen(out, db, entry_filter=FilterPaper(), entry_sort=SortConfYearPage(), expand_crossrefs=False, include_crossrefs=False, *args, **kwargs):
-    """ 
+    """
     Generate bibtex file
 
     Options:
     @arg expand_crossrefs: expand crossrefs inside entries instead of keeping the crossref field if True,
     @arg include_crossrefs: include crossrefs in the output if True and expand_crossrefs=False,
     @arg expand_values: expand values (using macros) if True
-    @arg remove_empty_fields: remove empty fields if True, empty fields are ones that are either empty or expand to an empty value 
+    @arg remove_empty_fields: remove empty fields if True, empty fields are ones that are either empty or expand to an empty value
       (in case expand_values=False and multiple macros values may be used using, e.g., multiple "abbrev*.bib" files, be extra careful)
     """
     entries = dict(entry_filter.filter(db.entries))
     bibtex_write_entries(
-        out, 
-        db, 
-        entry_sort.sort(iter(entries.items())), 
-        expand_crossrefs=expand_crossrefs, 
+        out,
+        db,
+        entry_sort.sort(iter(entries.items())),
+        expand_crossrefs=expand_crossrefs,
         *args, **kwargs
     )
-    
+
     if expand_crossrefs==False and include_crossrefs==True:
         # works because an entry crossrefed cannot crossref another entry
         crossrefs = dict()
@@ -267,10 +267,10 @@ def bibtex_gen(out, db, entry_filter=FilterPaper(), entry_sort=SortConfYearPage(
                     crossrefs[crossref] = db.entries[crossref]
 
         bibtex_write_entries(
-            out, 
-            db, 
-            entry_sort.sort(iter(crossrefs.items())), 
-            expand_crossrefs=expand_crossrefs, 
+            out,
+            db,
+            entry_sort.sort(iter(crossrefs.items())),
+            expand_crossrefs=expand_crossrefs,
             *args, **kwargs
         )
 
@@ -282,7 +282,7 @@ def bibtex_gen_str(db, *args, **kwargs):
 
 def sql_write_entry(out, entry, crossref=None):
     """ write entry for an entry in web2py sqlite (entry is a row corresponding to an entry)
-    @entry 
+    @entry
     @arg crossref if None, does nothing, otherwise, merge fields in entry
     """
     def key_sort(key):

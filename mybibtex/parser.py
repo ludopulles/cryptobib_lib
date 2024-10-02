@@ -27,13 +27,13 @@
 >>> parser = Parser()
 >>> bib_data = parser.parse_stream(StringIO(u'''
 ... @String{SCI = "Science"}
-... 
+...
 ... @String{JFernandez = "Fernandez, Julio M."}
 ... @String{HGaub = "Gaub, Hermann E."}
 ... @String{MGautel = "Gautel, Mathias"}
 ... @String{FOesterhelt = "Oesterhelt, Filipp"}
 ... @String{MRief = "Rief, Matthias"}
-... 
+...
 ... @Article{rief97b,
 ...   author =       MRief #" and "# MGautel #" and "# FOesterhelt
 ...                  #" and "# JFernandez #" and "# HGaub,
@@ -209,7 +209,7 @@ class BibTeXEntryIterator(Scanner):
     def parse_entry_fields(self):
         while True:
             self.current_field_name = None
-            self.current_value = Value() 
+            self.current_value = Value()
             self.parse_field()
             if self.current_field_name and self.current_value:
                 self.current_fields.append((self.current_field_name, self.current_value))
